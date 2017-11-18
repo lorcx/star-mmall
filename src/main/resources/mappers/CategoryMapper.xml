@@ -100,9 +100,7 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
-        update_time = now(),
-      </if>
+      update_time = now()
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -116,4 +114,13 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--查询父节点下的所有子节点不递归-->
+  <select id="selectCategoryChildrenByParentId" resultMap="BaseResultMap" parameterType="int">
+    SELECT
+      <include refid="Base_Column_Lista"></include>
+    FROM mmall_category m
+    WHERE m.parentId = #{categoryId}
+  </select>
+
 </mapper>

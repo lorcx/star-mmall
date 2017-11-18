@@ -105,6 +105,7 @@
       </if>
     </trim>
   </insert>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.mmall.pojo.User" >
     update mmall_user
     <set >
@@ -132,12 +133,11 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateTime != null" >
-        update_time = now(),
-      </if>
+      update_time = now()
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
   <update id="updateByPrimaryKey" parameterType="com.mmall.pojo.User" >
     update mmall_user
     set username = #{username,jdbcType=VARCHAR},
@@ -152,8 +152,63 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+  <!--检查用户是否存在-->
   <select id="checkUsername" resultType="int" parameterType="string">
-    select count(1) from mmall_user
-    where username = #{username}
+    select count(1) from mmall_user u
+    where u.username = #{username}
+  </select>
+
+  <!--登录-->
+  <select id="selectLogin" resultMap="BaseResultMap" parameterType="map" >
+    select <include refid="Base_Column_List" />
+    from mmall_user u
+    where u.username = #{username}
+    and u.password = #{password}
+  </select>
+
+  <!--检查email是否存在-->
+  <select id="checkEmail" resultType="int" parameterType="string">
+    select count(1) from mmall_user u
+    where u.email = #{email}
+  </select>
+
+  <!--获取用户密码找回问题-->
+  <select id="selectQuestionByUsername" resultType="string" parameterType="string">
+    select u.question from mmall_user u
+    where u.username = #{username}
+  </select>
+
+  <!--检查密码问题是否正确-->
+  <select id="checkAnswer" resultType="int" parameterType="map">
+    SELECT
+     count(1)
+     FROM mmall_user u
+     WHERE u.username = #{username}
+     AND u.question = #{question}
+     AND u.answer = #{answer}
+  </select>
+
+  <!--更新用户密码-->
+  <update id="updatePasswordByUsername" parameterType="map">
+    UPDATE mmall_user u
+    SET u.password = #{password}, u.update_time = now()
+    WHERE u.username = #{username}
+  </update>
+
+  <!--检查密码是否正确-->
+  <select id="checkPassword" resultType="int" parameterType="map">
+    SELECT
+    count(1)
+    FROM mmall_user u
+    WHERE u.id = #{userId}
+    AND u.password = #{password}
+  </select>
+
+  <!--检查email是否被别的用户占用-->
+  <select id="checkEmailByUserId" resultType="int" parameterType="map">
+    select count(1)
+    from mmall_user u
+    where u.email = #{email}
+    AND u.id = #{userId}
   </select>
 </mapper>
