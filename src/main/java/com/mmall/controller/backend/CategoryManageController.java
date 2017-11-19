@@ -74,6 +74,12 @@ public class CategoryManageController {
         }
     }
 
+    /**
+     * 查询子节点平级
+     * @param session
+     * @param categoryId
+     * @return
+     */
     @RequestMapping("get_category.do")
     @ResponseBody
     public ServerResponse getChildrenParallelCategory(HttpSession session,
@@ -91,6 +97,12 @@ public class CategoryManageController {
         }
     }
 
+    /**
+     * 查询所有子节点
+     * @param session
+     * @param categoryId
+     * @return
+     */
     @RequestMapping("get_deep_category.do")
     @ResponseBody
     public ServerResponse getCategoryAndDeepChildrenCategory(HttpSession session,

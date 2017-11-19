@@ -118,9 +118,9 @@
   <!--查询父节点下的所有子节点不递归-->
   <select id="selectCategoryChildrenByParentId" resultMap="BaseResultMap" parameterType="int">
     SELECT
-      <include refid="Base_Column_Lista"></include>
+      <include refid="Base_Column_List"></include>
     FROM mmall_category m
-    WHERE m.parentId = #{categoryId}
+    WHERE m.parent_id = #{categoryId}
   </select>
 
 </mapper>
