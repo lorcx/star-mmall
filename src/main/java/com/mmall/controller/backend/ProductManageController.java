@@ -163,7 +163,6 @@ public class ProductManageController {
      * 文件上传
      * @param session
      * @param file
-     * @param request
      * @return
      */
     @RequestMapping("/upload.do")
@@ -195,7 +194,6 @@ public class ProductManageController {
      * 富文本图片上传
      * @param session
      * @param file
-     * @param request
      * @return
      */
     @RequestMapping("/richtext_img_upload.do")

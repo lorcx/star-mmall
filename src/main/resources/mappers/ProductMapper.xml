@@ -180,7 +180,7 @@
     SELECT
     <include refid="Base_Column_List"></include>
     FROM mmall_product p
-    ORDER p.id asc
+    ORDER by p.id asc
   </select>
 
   <!--检索商品-->
@@ -196,6 +196,24 @@
         and p.id = #{productId}
       </if>
     </where>
-    ORDER p.id asc
+    ORDER by p.id asc
+  </select>
+
+  <!--商品列表查询根据名称和-->
+  <select id="selectByNameAndCategoryIds" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM mmall_product p
+    where status = 1
+    <if test="productName != null and productName != ''">
+      and p.name like #{productName}
+    </if>
+
+    <if test="categoryIdList != null ">
+      and p.category_id IN
+      <foreach collection="categoryIdList" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+      </foreach>
+    </if>
   </select>
 </mapper>

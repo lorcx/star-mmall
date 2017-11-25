@@ -26,12 +26,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.mmall.pojo.Cart" >
-    insert into mmall_cart (id, user_id, product_id, 
-      quantity, checked, create_time, 
-      update_time)
+    insert into mmall_cart
+    (id, user_id, product_id,  quantity, checked, create_time,  update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
-      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now()},
-      now())
+      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now(), now())
   </insert>
   <insert id="insertSelective" parameterType="com.mmall.pojo.Cart" >
     insert into mmall_cart
@@ -114,4 +112,59 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--根据userid productid 查询购物车-->
+  <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM mmall_cart c
+    WHERE c.user_id = #{userId}
+    and c.product_Id = #{productId}
+  </select>
+
+  <!--根据userid查询购物车-->
+  <select id="selectCartByUserId" parameterType="int" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"></include>
+    FROM mmall_cart c
+    WHERE c.user_id = #{userId}
+  </select>
+
+  <!--判断是否选中-->
+  <select id="selectCartProductCheckedStatusByUserId" resultType="int" parameterType="int">
+    select count(1)
+    from mmall_cart c
+    WHERE c.checked = 0
+    and c.user_id = #{userId}
+  </select>
+
+  <!--删除商品-->
+  <delete id="deleteByUserIdProductIds" parameterType="map">
+    DELETE FROM mmall_cart
+    where user_id = #{userId}
+    <if test="productIdList != null">
+      and product_id in
+      <foreach collection="productIdList" open="(" close=")" index="index" item="item" separator=",">
+        #{item, jdbcType=INTEGER}
+      </foreach>
+    </if>
+  </delete>
+
+  <!--更新选中状态-->
+  <update id="checkedOrUncheckedProduct" parameterType="map">
+    UPDATE mmall_cart c
+    SET  c.checked = #{checked},
+    update_time = now()
+    WHERE c.user_id = #{userId}
+    <if test="productId != null">
+      and c.product_id = #{productId}
+    </if>
+  </update>
+
+  <!--获取购物车总数-->
+  <select id="getCartProductCount" parameterType="int" resultType="int">
+    SELECT IFNULL(sum(quantity), 0) as count
+    FROM mmall_cart c
+    WHERE c.user_id = #{userId}
+  </select>
 </mapper>
