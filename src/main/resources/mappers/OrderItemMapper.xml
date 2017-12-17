@@ -161,4 +161,33 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!--查询订单详情-->
+  <select id="getByOrderNoUserId" parameterType="map" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List"></include>
+    FROM mmall_order_item moi
+    WHERE moi.user_id = #{userId}
+    AND moi.order_no = #{orderNo}
+  </select>
+
+  <!--批量插入订单详情-->
+  <insert id="batchInsert" parameterType="list">
+    insert into mmall_order_item (id, user_id, order_no,
+      product_id, product_name, product_image,
+      current_unit_price, quantity, total_price,
+      create_time, update_time)
+    values
+    <foreach collection="orderItemList" separator="," item="item">
+      (#{item.id,jdbcType=INTEGER}, #{item.userId,jdbcType=INTEGER}, #{item.orderNo,jdbcType=BIGINT},
+      #{item.productId,jdbcType=INTEGER}, #{item.productName,jdbcType=VARCHAR}, #{item.productImage,jdbcType=VARCHAR},
+      #{item.currentUnitPrice,jdbcType=DECIMAL}, #{item.quantity,jdbcType=INTEGER}, #{item.totalPrice,jdbcType=DECIMAL},
+      now(), now())
+    </foreach>
+  </insert>
+
+  <select id="getByOrderNo" parameterType="string" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"></include>
+    from mmall_order_item moi
+    where moi.user_id = #{userId}
+  </select>
 </mapper>

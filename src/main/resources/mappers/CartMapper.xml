@@ -167,4 +167,12 @@
     FROM mmall_cart c
     WHERE c.user_id = #{userId}
   </select>
+
+  <!--查询选中状态的购物车-->
+  <select id="selectCheckedCartByUserId" resultMap="BaseResultMap" parameterType="int">
+      select <include refid="Base_Column_List"></include>
+      from mmall_cart c
+      where c.user_id = #{userId}
+      and c.checked = 1
+  </select>
 </mapper>

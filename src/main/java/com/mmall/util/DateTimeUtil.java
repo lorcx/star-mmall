@@ -25,6 +25,13 @@ public class DateTimeUtil {
         return dateTime.toDate();
     }
 
+    public static Date strToDate(String dateTimeStr){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern(FORMAT);
+        DateTime dateTime = dateTimeFormatter.parseDateTime(dateTimeStr);
+        return dateTime.toDate();
+    }
+
+
     /**
      * date转字符串时间,需要指定格式化
      * @param date
